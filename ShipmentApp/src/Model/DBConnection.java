@@ -10,8 +10,6 @@ package Model;
 
 import java.sql.*;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DBConnection{
   private final String url;

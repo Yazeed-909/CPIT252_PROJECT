@@ -5,7 +5,8 @@
 package Controller;
 
 import Model.Shipment;
-import Model.ShipmentStatus;
+import Model.ShipmentInterface;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -36,7 +37,7 @@ public class MoreDetailsConroller implements Initializable {
         Website.setText(shipment.getWeblink());
         Tracking_number.setText(shipment.getTracking_number());
         ItemReceived.setText(shipment.getItemReceived());
-        for (ShipmentStatus shipment_statu : shipment.getShipment_status()) {
+        for (ShipmentInterface shipment_statu : shipment.getShipment_status()) {
 
             StatusList.getItems().addAll(shipment_statu.toString());
 

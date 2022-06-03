@@ -11,36 +11,36 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.concurrent.TimeoutException;
 
 /**
  *
  * @author yzeed
  */
-public class ShipmentCreator {
-
+public class ShipmentCreator extends Shipment{
     
-   private Shipment shipment;
+   
+    final String APIKEY = ("APIKEY");
+
    private JsonNode node;
     
     
     public ShipmentCreator(String ShipmentNumber,String CarrierCode) {
-        
+        super();
         SendRequest(ShipmentNumber, CarrierCode);
         ParsShipment(node);
         
         
+        
     }
 
-    public Shipment getShipment() {
-        return shipment;
-    }
+ 
     
     
     
     
     
-    
-    private void Get_status(JsonNode node,Shipment shipment ){
+    private void Get_status(JsonNode node ){
         
          for (int i = 0; i < node.get("data").findValue("trackinfo").size(); i++) {    
              
@@ -53,8 +53,8 @@ public class ShipmentCreator {
             String checkpoint_status=node.get("data").findValue("trackinfo").get(0).get("checkpoint_status").textValue(); 
             String substatus=node.get("data").findValue("trackinfo").get(0).get("substatus").textValue(); 
             ShipmentStatus status=new ShipmentStatus(Details, substatus, substatus, Date);
-            shipment.setLastStatus(status);
-            shipment.insertStatus(status);
+            super.setLastStatus(status);
+            super.insertStatus(status);
             continue;
              }
              
@@ -68,8 +68,8 @@ public class ShipmentCreator {
             String Details=node.get("data").findValue("trackinfo").get(i).get("Details").textValue(); 
             String checkpoint_status=node.get("data").findValue("trackinfo").get(i).get("checkpoint_status").textValue(); 
             String substatus=node.get("data").findValue("trackinfo").get(i).get("substatus").textValue(); 
-            ShipmentStatus status=new ShipmentStatus(Details, substatus, substatus, Date);
-            shipment.insertStatus(status);  
+            ShipmentInterface Status=new ShipmentStatus(Details, substatus, substatus, Date);
+            super.insertStatus(Status);  
             
         }
        
@@ -77,12 +77,13 @@ public class ShipmentCreator {
     }
     private  void SendRequest(String ShipmentNumber,String CarrierCode){
          //Some of this code is taken from lab2
+          String code;
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.tracktry.com/v1/trackings/"+CarrierCode+"/"+ShipmentNumber))
                     .header("Content-Type", "application/json")
-                    .header("Tracktry-Api-Key", "7802c747-567c-42aa-b5aa-fc311647fd31")
+                    .header("Tracktry-Api-Key", APIKEY)
                     .method("GET", HttpRequest.BodyPublishers.noBody())
                     .build();
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
@@ -90,12 +91,18 @@ public class ShipmentCreator {
                     thenApply(HttpResponse::body).join();
             ObjectMapper maper=new ObjectMapper();
              node=maper.readTree(response.body());
-           
+             code=node.get("meta").findValue("code").asText();
+            if(!"200".equals(code)){
+               throw new TimeoutException("Error While Calling the api");
+            }
         } catch (IOException ex) {
-           
+            System.out.println(ex.getMessage());
         } catch (InterruptedException ex) {
-        
-        }
+            System.out.println(ex.getMessage());
+        } catch (TimeoutException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println(node.get("meta"));
+       }
         
          
         
@@ -103,16 +110,16 @@ public class ShipmentCreator {
     }
     private void ParsShipment(JsonNode node){
         
-        String id=node.get("data").findValue("id").textValue();
-        String tracking_number=node.get("data").findValue("tracking_number").textValue();
-        String carrier_code=node.get("data").findValue("carrier_code").textValue();
-        String lastUpdateTime=node.get("data").findValue("lastUpdateTime").textValue();
-        String ItemReceived=node.get("data").findValue("ItemReceived").textValue();
-        String weblink=node.get("data").findValue("weblink").textValue();
-        String updated_at=node.get("data").findValue("updated_at").textValue();
-        String status=node.get("data").findValue("status").textValue();
-        shipment=new Shipment(tracking_number, id, carrier_code, status, lastUpdateTime, ItemReceived, updated_at, weblink, updated_at);
-        Get_status(node, shipment);
+        super.id=node.get("data").findValue("id").textValue();
+        super.tracking_number=node.get("data").findValue("tracking_number").textValue();
+        super.carrier_code=node.get("data").findValue("carrier_code").textValue();
+        super.lastUpdateTime=node.get("data").findValue("lastUpdateTime").textValue();
+        super.ItemReceived=node.get("data").findValue("ItemReceived").textValue();
+        super.weblink=node.get("data").findValue("weblink").textValue();
+        super.updated_at=node.get("data").findValue("updated_at").textValue();
+        super.status=node.get("data").findValue("status").textValue();
+        
+        Get_status(node);
         
     }
     

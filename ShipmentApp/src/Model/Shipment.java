@@ -6,19 +6,22 @@ package Model;
 
 import java.util.ArrayList;
 
-public  class Shipment{
+public abstract class Shipment implements ShipmentInterface{
 
-    private String tracking_number;
-    private String id;
-    private String carrier_code;
-    private String status;
-    private String lastUpdateTime;
-    private String ItemReceived;
-    private String created_at;
-    private String weblink;
-    private String updated_at;
-    private ArrayList<ShipmentStatus> shipment_status=new ArrayList<>();
-    private ShipmentStatus LastStatus;
+    protected String tracking_number;
+    protected String id;
+    protected String carrier_code;
+    protected String status;
+    protected String lastUpdateTime;
+    protected String ItemReceived;
+    protected String created_at;
+    protected String weblink;
+    protected String updated_at;
+    protected ArrayList<ShipmentInterface> shipment_status=new ArrayList<>();
+    protected ShipmentStatus LastStatus;
+
+    public Shipment() {
+    }
     
     
    
@@ -82,7 +85,7 @@ public  class Shipment{
     }
 
  
-    public void insertStatus(ShipmentStatus shipment_status){
+    public void insertStatus(ShipmentInterface shipment_status){
         
         this.shipment_status.add(shipment_status);
         
@@ -110,12 +113,27 @@ public  class Shipment{
         return updated_at;
     }
 
-    public ArrayList<ShipmentStatus> getShipment_status() {
+    public ArrayList<ShipmentInterface> getShipment_status() {
         return shipment_status;
     }
 
     public ShipmentStatus getLastStatus() {
         return LastStatus;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("---- Shipment Info ----");
+        System.out.println("tracking_number : "+tracking_number);
+        System.out.println("id : "+id);
+        System.out.println("carrier_code : "+carrier_code);
+        System.out.println("status : "+status);
+        System.out.println("lastUpdateTime : "+lastUpdateTime);
+        System.out.println("ItemReceived : "+ItemReceived);
+        System.out.println("created_at : "+created_at);
+        System.out.println("weblink : "+weblink);
+        System.out.println("updated_at : "+updated_at);
+
     }
     
     

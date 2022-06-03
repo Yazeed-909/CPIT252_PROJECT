@@ -5,7 +5,7 @@
 package Model;
 
 
-public class ShipmentStatus{
+public class ShipmentStatus implements ShipmentInterface{
     private String Location;
     private String Current_status;
     private String Time;
@@ -47,6 +47,14 @@ public class ShipmentStatus{
     @Override
     public String toString() {
         return "Current Location : " + Location + ", Current Status : " + Current_status + ", Time : " + Time;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("---- Shipment Status ----");
+        System.out.println("Location : "+Location);
+        System.out.println("Current_status : "+Current_status);
+        System.out.println("Time : "+Time);
     }
 
 

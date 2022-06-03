@@ -40,10 +40,8 @@ public class MainController implements Initializable {
     public void Shipment_Status() {
 
         try {
-            
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/MoreDetails.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
-            //tock these 2 lines above from YouTube channel called BroCode 
             MoreDetailsConroller Conroller2 = fxmlLoader.getController();
             if (Box1.isPressed()) {
                 Conroller2.SetShipment(model.getShipments().get(0));

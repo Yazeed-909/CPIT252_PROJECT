@@ -21,17 +21,17 @@ public class Model {
    
    private ArrayList<Shipment> shipments=new ArrayList<>(); 
     private Model() {
-       ShipmentCreator s = new ShipmentCreator("Z8000543", "zajil");
-       shipmentzajil=s.getShipment();
+       shipmentzajil= new ShipmentCreator("Z8000543", "zajil");
        
-       ShipmentCreator s2= new ShipmentCreator("34320938551", "aramex");
-       shipmentaramex=s2.getShipment(); 
        
-       ShipmentCreator s3= new ShipmentCreator("6226548731", "dhl");
-       shipmentdhl=s3.getShipment(); 
+       shipmentaramex= new ShipmentCreator("34320938551", "aramex");
+        
        
-       ShipmentCreator s4= new ShipmentCreator("55033295", "naqel");
-       shipmentnaqel=s4.getShipment();
+       shipmentdhl= new ShipmentCreator("6226548731", "dhl");
+    
+       
+        shipmentnaqel= new ShipmentCreator("55033295", "naqel");
+        
        
        
        shipments.add(shipmentzajil);
